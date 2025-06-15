@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios'; // Removed axios import
 import { Star, Send, MapPin } from 'lucide-react';
 
 const FeedbackForm = () => {
@@ -26,19 +26,30 @@ const FeedbackForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/feedback/submit', {
+      // Get existing feedback from localStorage or initialize with empty array
+      const existingFeedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+
+      const newFeedback = {
+        _id: `feedback${Date.now()}`,
         locationName: spotName,
         rating,
-        message: feedback,
-      });
+        comment: feedback,
+        date: new Date().toISOString(),
+        isApproved: false // Newly submitted feedback is pending by default
+      };
 
-      if (response.status === 201) {
-        setSuccess('Feedback submitted successfully!');
-        // Reset the form after successful submission
-        setSpotName('');
-        setFeedback('');
-        setRating(0);
-      }
+      // Add new feedback to the array
+      const updatedFeedback = [...existingFeedback, newFeedback];
+
+      // Save to localStorage
+      localStorage.setItem('feedback', JSON.stringify(updatedFeedback));
+
+      setSuccess('Feedback submitted successfully!');
+      // Reset the form after successful submission
+      setSpotName('');
+      setFeedback('');
+      setRating(0);
+
     } catch (error) {
       setError('An error occurred while submitting your feedback. Please try again.');
     } finally {

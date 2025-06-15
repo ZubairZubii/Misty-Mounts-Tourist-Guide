@@ -11,13 +11,14 @@ import Feedback from '../pages/Feedback';
 const RoutesFile = () => {
   return (
     <Routes>
-      <Route path="/destinations" element={<Destination />} /> {/* Destinations page route */}
-      <Route path="/about" element={<About />} /> {/* About page route */}
-      <Route path="/contact" element={<Contact />} /> {/* Contact page route */}
+      <Route path="/user/destinations" element={<Destination />} /> {/* Destinations page route */}
+      <Route path="/user/about" element={<About />} /> {/* About page route */}
+      <Route path="/user/contact" element={<Contact />} /> {/* Contact page route */}
+      <Route path="/user/hotels" element={<Hotel />} /> {/* Hotels page route */}
       <Route path="/city/:city/spot/:spotId" element={<CityDetail />} />
-      <Route path="/accommodations/:id" element={<Hotel />} /> {/* Hotel details route */}
       <Route path="/payment" element={<Payment />} />
-      <Route path="/Feedback" element={<Feedback />} />
+      <Route path="/feedback" element={<Feedback />} />
+      <Route path="/auth" element={<Authentication />} /> {/* Authentication route */}
     </Routes>
   );
 };

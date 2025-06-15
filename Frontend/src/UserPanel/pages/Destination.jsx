@@ -1,12 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios'; // Removed axios import
 import Navbar from "../components/Navbar";
 import HeroSection from '../components/Destinations/HeroSection';
 import SearchBar from '../components/Destinations/SearchBar';
 import CityCard from '../components/Destinations/CityCard';
 import Pagination from '../components/Destinations/Pagination';
 
-const API_BASE_URL = 'http://localhost:5000/api/admin';
+// const API_BASE_URL = 'http://localhost:5000/api/admin'; // Removed API_BASE_URL
+
+const defaultCities = ["Islamabad", "Lahore", "Karachi"];
+
+const defaultNearbyPlaces = {
+  "Islamabad": [
+    {
+      _id: "islamabad_place1",
+      name: "Faisal Mosque",
+      location: "Shah Faisal Avenue, Islamabad",
+      picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    },
+    {
+      _id: "islamabad_place2",
+      name: "Daman-e-Koh",
+      location: "Margalla Hills, Islamabad",
+      picture: "https://images.unsplash.com/photo-1602334057997-76f0c60963e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    }
+  ],
+  "Lahore": [
+    {
+      _id: "lahore_place1",
+      name: "Badshahi Mosque",
+      location: "Walled City of Lahore",
+      picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    },
+    {
+      _id: "lahore_place2",
+      name: "Shalimar Gardens",
+      location: "Baghbanpura, Lahore",
+      picture: "https://images.unsplash.com/photo-1629859599229-4d7a8b6f3c1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    }
+  ],
+  "Karachi": [
+    {
+      _id: "karachi_place1",
+      name: "Clifton Beach",
+      location: "Clifton, Karachi",
+      picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    },
+    {
+      _id: "karachi_place2",
+      name: "Quaid's Mausoleum",
+      location: "Jinnah Road, Karachi",
+      picture: "https://images.unsplash.com/photo-1629859599229-4d7a8b6f3c1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+    }
+  ]
+};
 
 const Destination = () => {
   const [selectedCity, setSelectedCity] = useState('');
@@ -16,48 +63,25 @@ const Destination = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCities = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(`${API_BASE_URL}/cities`, { withCredentials: true });
-        console.log('Cities response:', response.data); // Log the response
-        if (Array.isArray(response.data)) {
-          setCities(response.data);
-          if (response.data.length > 0) {
-            setSelectedCity(response.data[0]);
-          }
-        } else {
-          throw new Error('Received invalid data for cities');
-        }
-      } catch (error) {
-        console.error('Error fetching cities:', error);
-        setError('Failed to fetch cities. Please try again later.');
-      } finally {
-        setIsLoading(false);
+    // Simulate fetching cities with default data
+    setTimeout(() => {
+      setCities(defaultCities);
+      if (defaultCities.length > 0) {
+        setSelectedCity(defaultCities[0]);
       }
-    };
+      setIsLoading(false);
+    }, 500); // Simulate network delay
 
-    fetchCities();
   }, []);
 
   useEffect(() => {
-    const fetchNearbyPlaces = async () => {
-      if (selectedCity) {
-        setIsLoading(true);
-        try {
-          const response = await axios.get(`${API_BASE_URL}/spots/${selectedCity}`, { withCredentials: true });
-          console.log('Nearby places response:', response.data); // Log the response
-          setNearbyPlaces(response.data.nearbyPlaces || []);
-        } catch (error) {
-          console.error('Error fetching nearby places:', error);
-          setError('Failed to fetch nearby places. Please try again later.');
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchNearbyPlaces();
+    // Simulate fetching nearby places based on selected city
+    if (selectedCity) {
+      setTimeout(() => {
+        setNearbyPlaces(defaultNearbyPlaces[selectedCity] || []);
+        setIsLoading(false);
+      }, 500); // Simulate network delay
+    }
   }, [selectedCity]);
 
   if (isLoading) {

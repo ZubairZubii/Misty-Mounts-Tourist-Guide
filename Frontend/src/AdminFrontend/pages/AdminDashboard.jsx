@@ -12,6 +12,36 @@ const navitem = [
   { img: "/landmark.png", name: "Tourist Spot" },
 ];
 
+const defaultFeedback = [
+  {
+    _id: "feedback1",
+    userId: "user1",
+    userName: "Ahmed Khan",
+    rating: 5,
+    comment: "Excellent service! The local guide was very knowledgeable and helpful.",
+    date: "2024-03-15",
+    isApproved: true
+  },
+  {
+    _id: "feedback2",
+    userId: "user2",
+    userName: "Sara Ali",
+    rating: 4,
+    comment: "Great experience overall. Would recommend to others.",
+    date: "2024-03-14",
+    isApproved: true
+  },
+  {
+    _id: "feedback3",
+    userId: "user3",
+    userName: "Mohammad Hassan",
+    rating: 3,
+    comment: "Good service but could improve on punctuality.",
+    date: "2024-03-13",
+    isApproved: false
+  }
+];
+
 const options2 = {
   chart: {
     type: "areaspline",
@@ -158,24 +188,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchReviews = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/feedback/");
-
-      // Check if response has a specific structure
-      if (response.data && response.data.feedbacks) {
-        setReviews(response.data.feedbacks);
-      } else {
-        setReviews([]); // Set an empty array if no feedbacks are available
-      }
-
-      setLoading(false); // Stop loading spinner after data is fetched
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-      setLoading(false); // Stop loading spinner in case of error
-    }
-  };
-
   const fetchTopHotels = async () => {
     try {
       const response = await axios.get(
@@ -191,7 +203,14 @@ const AdminDashboard = () => {
 
   // Fetch reviews on component mount
   useEffect(() => {
-    fetchReviews();
+    const storedFeedback = JSON.parse(localStorage.getItem('feedback'));
+    if (storedFeedback && storedFeedback.length > 0) {
+      setReviews(storedFeedback);
+    } else {
+      setReviews(defaultFeedback);
+      localStorage.setItem('feedback', JSON.stringify(defaultFeedback));
+    }
+
     fetchTopHotels();
     fetchSpotAnalytics();
     fetchPaymentsAndCalculateTotal();

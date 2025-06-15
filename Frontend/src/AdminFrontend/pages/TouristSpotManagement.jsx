@@ -7,14 +7,61 @@ import SideMenu from "../components/SideMenu";
 import TopBar from "../components/TopBar";
 import LoadingComponent from "../components/Loading";
 
+// Default tourist spots data
+const defaultSpots = [
+  {
+    _id: "default1",
+    city: "Islamabad",
+    nearbyPlaces: [
+      {
+        _id: "default1_place1",
+        name: "Faisal Mosque",
+        location: "Shah Faisal Avenue, Islamabad",
+        description: "The largest mosque in Pakistan and one of the largest in the world. Its unique design combines traditional Islamic architecture with modern elements.",
+        picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+      }
+    ],
+    isApproved: true
+  },
+  {
+    _id: "default2",
+    city: "Lahore",
+    nearbyPlaces: [
+      {
+        _id: "default2_place1",
+        name: "Badshahi Mosque",
+        location: "Walled City of Lahore",
+        description: "One of the world's largest mosques, built in 1673. Known for its stunning Mughal architecture and beautiful courtyard.",
+        picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+      }
+    ],
+    isApproved: true
+  },
+  {
+    _id: "default3",
+    city: "Karachi",
+    nearbyPlaces: [
+      {
+        _id: "default3_place1",
+        name: "Clifton Beach",
+        location: "Clifton, Karachi",
+        description: "A popular beach destination with beautiful views of the Arabian Sea. Known for its sunset views and recreational activities.",
+        picture: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+      }
+    ],
+    isApproved: true
+  }
+];
+
 const TouristSpotManagement = () => {
   const [NavOpen, IsNavOpen] = useState(false);
-  const [spots, setSpots] = useState([]);
-  const [loading, setLoading] = useState(true); // Initially set loading to true
-  const [selectedSpot, setSelectedSpot] = useState(null); // For updating a spot
+  const [spots, setSpots] = useState(defaultSpots); // Initialize with default spots
+  const [loading, setLoading] = useState(false); // Set to false since we're using default spots
+  const [error, setError] = useState(null);
+  const [selectedSpot, setSelectedSpot] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [spotsPerPage, setSpotsPerPage] = useState(1); // 1 spot per page for example
+  const [spotsPerPage, setSpotsPerPage] = useState(1);
   const indexOfLastSpot = currentPage * spotsPerPage;
   const indexOfFirstSpot = indexOfLastSpot - spotsPerPage;
 
@@ -29,67 +76,36 @@ const TouristSpotManagement = () => {
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
-  // Fetch all spots
-  const fetchSpots = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/admin/spots");
-      setSpots(response.data);
-      setLoading(false); // Set loading to false when data is fetched
-    } catch (error) {
-      console.error("Error fetching tourist spots:", error);
-      setLoading(false); // Set loading to false in case of error
-    }
-  };
-
-  useEffect(() => {
-    fetchSpots();
-  }, []); // Fetch spots on component mount
 
   // Handle spot approval or rejection
   const handleApproval = async (touristSpotId) => {
     try {
-      // Find the tourist spot by its _id using the find method
       const touristSpot = spots.find((spot) => spot._id === touristSpotId);
-
       if (!touristSpot) {
         throw new Error("Tourist Spot not found");
       }
-
-      // Update the 'isApproved' field to true
-      touristSpot.isApproved = true;
-
-      // Save the changes to the tourist spot document
-      await axios.put(
-        `http://localhost:5000/api/admin/spots/${touristSpotId}`,
-        { isApproved: true }
+      // Update local state only
+      const updatedSpots = spots.map(spot => 
+        spot._id === touristSpotId ? { ...spot, isApproved: true } : spot
       );
-
-      console.log("Tourist spot approved successfully");
-      fetchSpots(); // Refresh the spots after approval
+      setSpots(updatedSpots);
     } catch (error) {
       console.error("Error approving tourist spot:", error);
     }
   };
+
   // Handle spot disapproval
   const handleDisapproval = async (touristSpotId) => {
     try {
       const touristSpot = spots.find((spot) => spot._id === touristSpotId);
-
       if (!touristSpot) {
         throw new Error("Tourist Spot not found");
       }
-
-      // Update the 'isApproved' field to false
-      touristSpot.isApproved = false;
-
-      // Save the changes to the tourist spot document
-      await axios.put(
-        `http://localhost:5000/api/admin/spots/${touristSpotId}`,
-        { isApproved: false }
+      // Update local state only
+      const updatedSpots = spots.map(spot => 
+        spot._id === touristSpotId ? { ...spot, isApproved: false } : spot
       );
-
-      console.log("Tourist spot disapproved successfully");
-      fetchSpots(); // Refresh the spots after disapproval
+      setSpots(updatedSpots);
     } catch (error) {
       console.error("Error disapproving tourist spot:", error);
     }
@@ -98,9 +114,14 @@ const TouristSpotManagement = () => {
   // Handle adding a new spot
   const handleAddSpot = async (newSpot) => {
     try {
-      await axios.post("http://localhost:5000/api/admin/spots", newSpot);
-      fetchSpots(); // Refresh the spots after adding
-      setShowForm(false); // Close the form after successful addition
+      // Add to local state only
+      const spotWithId = {
+        ...newSpot,
+        _id: `default${spots.length + 1}`,
+        isApproved: true
+      };
+      setSpots([...spots, spotWithId]);
+      setShowForm(false);
     } catch (error) {
       console.error("Error adding tourist spot:", error);
     }
@@ -110,13 +131,13 @@ const TouristSpotManagement = () => {
   const handleUpdateSpot = async (updatedSpot) => {
     if (!selectedSpot) return;
     try {
-      await axios.put(
-        `http://localhost:5000/api/admin/spots/${selectedSpot._id}`,
-        updatedSpot
+      // Update local state only
+      const updatedSpots = spots.map(spot => 
+        spot._id === selectedSpot._id ? { ...spot, ...updatedSpot } : spot
       );
-      fetchSpots(); // Refresh the spots after updating
-      setSelectedSpot(null); // Reset the selected spot after update
-      setShowForm(false); // Close the form after successful addition
+      setSpots(updatedSpots);
+      setSelectedSpot(null);
+      setShowForm(false);
     } catch (error) {
       console.error("Error updating tourist spot:", error);
     }
@@ -125,8 +146,9 @@ const TouristSpotManagement = () => {
   // Handle deleting a spot
   const handleDeleteSpot = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/spots/${id}`);
-      fetchSpots(); // Refresh the spots after deletion
+      // Update local state only
+      const updatedSpots = spots.filter(spot => spot._id !== id);
+      setSpots(updatedSpots);
     } catch (error) {
       console.error("Error deleting tourist spot:", error);
     }
@@ -143,7 +165,7 @@ const TouristSpotManagement = () => {
       <TouristSpotForm
         spot={selectedSpot} // Pass selectedSpot to pre-fill the form
         onSubmit={selectedSpot ? handleUpdateSpot : handleAddSpot}
-        refreshSpots={fetchSpots}
+        refreshSpots={() => {}}
       />
     );
   }
@@ -184,17 +206,21 @@ const TouristSpotManagement = () => {
       <div className="w-full flex flex-col md:ml-20">
         <TopBar NavOpen={NavOpen} IsNavOpen={IsNavOpen} />
         <div className="transition-all duration-1000 ease-in-out">
-        <div
-            className={`flex flex-col w-full justify-between gap-5 p-5 mt-20 ${
-              NavOpen
-                ? "md:max-w-[calc(100vw_-_100px)] sm:max-w-[calc(100vw_-_160px)] md:pl-36 transition-all duration-500"
-                : "md:max-w-[calc(100vw_-_100px)] transition-all duration-500"
-            }`}
-          >
+          <div className={`flex flex-col w-full justify-between gap-5 p-5 mt-20 ${
+            NavOpen
+              ? "md:max-w-[calc(100vw_-_100px)] sm:max-w-[calc(100vw_-_160px)] md:pl-36 transition-all duration-500"
+              : "md:max-w-[calc(100vw_-_100px)] transition-all duration-500"
+          }`}>
             <div>
               <h1 className="text-center text-2xl font-bold">
                 Tourist Spot Management
               </h1>
+
+              {error && (
+                <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+                  <p>{error}</p>
+                </div>
+              )}
 
               {/* Toggle Button */}
               <div className="text-center my-4">
@@ -217,7 +243,7 @@ const TouristSpotManagement = () => {
                   <TouristSpotForm
                     spot={selectedSpot} // Pass the selected spot for editing
                     onSubmit={selectedSpot ? handleUpdateSpot : handleAddSpot} // Handle form submission based on mode
-                    refreshSpots={fetchSpots} // Refresh spots after adding or updating
+                    refreshSpots={() => {}} // Refresh spots after adding or updating
                   />
                 </>
               )}
