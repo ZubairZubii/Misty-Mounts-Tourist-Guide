@@ -1,7 +1,3 @@
-![Screenshot 2025-06-15 132111](https://github.com/user-attachments/assets/cde9609d-906b-46b1-80ed-f7bb241b9c26)# Misty Mounts Tourist Guide
-
-![Misty Mounts Logo](/logo.png)
-
 Misty Mounts is a comprehensive MERN stack-based web application designed to promote tourism in Northern Pakistan. It serves as a detailed guide to both popular and hidden tourist spots, offering features for users to explore destinations, find accommodations, and for local guides and administrators to manage content and bookings. Our goal is to provide travelers with an intuitive and rich experience, making their journey through the beautiful Northern areas of Pakistan seamless and memorable.
 
 ## Table of Contents
