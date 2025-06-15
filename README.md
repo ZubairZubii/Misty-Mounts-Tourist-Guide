@@ -1,4 +1,4 @@
-# Misty Mounts Tourist Guide
+![Screenshot 2025-06-15 132111](https://github.com/user-attachments/assets/cde9609d-906b-46b1-80ed-f7bb241b9c26)# Misty Mounts Tourist Guide
 
 ![Misty Mounts Logo](/logo.png)
 
@@ -17,7 +17,16 @@ Misty Mounts is a comprehensive MERN stack-based web application designed to pro
 
 ## Features
 
-**User Panel:**
+### User Panel Interface
+![User Panel Dashboard](/Screenshot%202025-06-15%20133758.png)
+![User Panel Destinations](/Screenshot%202025-06-15%20130733.png)
+![User Panel Hotels](/Screenshot%202025-06-15%20130806.png)
+![User Panel About Us](/Screenshot%202025-06-15%20130905.png)
+![User Panel Contact](/Screenshot%202025-06-15%20132111.png)
+![User Panel Login](/Screenshot%202025-06-15%20132135.png)
+![User Panel Signup](/Screenshot%202025-06-15%20132152.png)
+
+**User Panel Features:**
 *   **Interactive Homepage:** Visually appealing landing page with featured destinations.
 *   **Destination Explorer:** Browse and search for various tourist spots.
 *   **Hotel Listings:** Discover and book accommodations.
@@ -25,8 +34,21 @@ Misty Mounts is a comprehensive MERN stack-based web application designed to pro
 *   **Dynamic UI:** Modern and professional design with animations and responsive layout.
 *   **Dark Mode Toggle:** For comfortable viewing in different lighting conditions.
 
-**Local Guide Panel:**
-*   (Features to be added by local guides - e.g., Add/Manage Spots, Manage Bookings, Respond to Feedback)
+### Local Guide Panel Interface
+![Local Guide Dashboard](/1.png)
+![Local Guide Destinations](/2.png)
+![Local Guide Bookings](/3.png)
+![Local Guide Profile](/4.png)
+![Local Guide Settings](/5.png)
+![Local Guide Analytics](/6.png)
+
+**Local Guide Panel Features:**
+*   **Dashboard Overview:** Comprehensive view of bookings and activities
+*   **Destination Management:** Add and manage tourist spots
+*   **Booking Management:** Handle and track user bookings
+*   **Profile Management:** Update guide information and credentials
+*   **Settings:** Customize guide preferences and notifications
+*   **Analytics:** View performance metrics and user engagement
 
 **Admin Panel:**
 *   (Features to be added by administrators - e.g., User Management, Content Moderation, Analytics)
@@ -178,3 +200,14 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 For any questions, issues, or collaborations, please contact [Zubair](mailto:your.email@example.com) (replace with your actual email).
 
 Your GitHub Profile: [ZubairZubii](https://github.com/ZubairZubii)
+
+
+
+
+
+
+
+
+
+
+
